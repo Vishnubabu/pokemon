@@ -1,6 +1,5 @@
 'use client'
 
-import { useEffect, useState } from "react";
 import Link from 'next/link';
 import Loader from "@/app/components/Loader";
 import cn from "classnames";
@@ -12,27 +11,15 @@ import Header from "@/app/components/Header";
 import dynamic from 'next/dynamic';
 import getIdFromUrl from "@/app/utils/getIdFromUrl";
 import { useRouter } from "next/navigation";
+import { useQuery } from '@tanstack/react-query';
+
 
 /**
  * Dynamically loading, as it is breaking SSR
  */
 const Chart = dynamic(() => import('react-apexcharts'), {
   loading: () => <Loader />,
-})
-
-const promises = {}; // cache all api responses
-function getPokemon(id) {
-  if (!promises[id]) {
-    promises[id] = fetch(`${POKE_API}pokemon/${id}`)
-      .then(r => r.json())
-      .catch(e => {
-        console.error(e);
-        delete promises[id];
-        throw e;
-      });
-  }
-  return promises[id];
-}
+});
 
 function Row({ name, children, className }) {
   return <li className="py-3 sm:py-4">
@@ -60,29 +47,30 @@ function Section({ hd, children }) {
 
 export default function Page({ params }) {
   const [pokemonName, id] = params.slug;
-  const [pokemon, setPokemon] = useState();
   const { replace } = useRouter();
 
-  useEffect(() => {
-    getPokemon(id)
+  const { isPending, data: pokemon } = useQuery({
+    queryKey: [`pokemon/${id}`],
+    queryFn: () => fetch(`${POKE_API}pokemon/${id}`)
+      .then(r => r.json())
       .then(({ name, abilities, forms, held_items, species, stats, types, height, weight }) => {
         if (name !== pokemonName) { // fix url if not valid
           replace(`/pokemon/${name}/${id}`);
           return;
         }
 
-        setPokemon({
+        return {
           name, abilities, forms, held_items, species, stats, types, height, weight
-        });
-      });
-  }, [id, pokemonName, replace]);
+        };
+      })
+  });
 
   return <>
     <Header first={cleanupName(pokemonName)} />
 
     <PokemonImg id={id} name={pokemonName} />
 
-    {!pokemon && <Loader />}
+    {isPending && <Loader />}
 
     {!!pokemon && <>
       <Section hd="Information">

@@ -3,6 +3,7 @@
  */
 import { render, cleanup, waitFor } from "@testing-library/react";
 import Page from "@/app/page";
+import WrapQueryClient from "@/app/components/WrapQueryClient";
 
 function mockFetch(data) {
   return jest.fn().mockImplementation(() =>
@@ -34,7 +35,7 @@ describe("Home", () => {
       ]
     });
 
-    const { getByTestId } = render(<Page />);
+    const { getByTestId } = render(<WrapQueryClient><Page /></WrapQueryClient>);
     await waitFor(() => {
       expect(getByTestId('list')).toBeInTheDocument();
     });

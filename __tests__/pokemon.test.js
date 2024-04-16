@@ -16,6 +16,7 @@ jest.mock("next/navigation", () => ({
 jest.doMock('react-apexcharts', () => () => null);
 
 import Page from "@/app/pokemon/[...slug]/page";
+import WrapQueryClient from "@/app/components/WrapQueryClient";
 
 function mockFetch(data) {
   return jest.fn().mockImplementation(() =>
@@ -74,7 +75,7 @@ describe("Pokemon page", () => {
       "weight": 3000
     });
 
-    const { container, getByTestId } = render(<Page params={{ slug: ['golem'] }} />);
+    const { container, getByTestId } = render(<WrapQueryClient><Page params={{ slug: ['golem'] }} /></WrapQueryClient>);
     await waitFor(() => {
       expect(getByTestId('list')).toBeInTheDocument();
     });

@@ -13,6 +13,7 @@ jest.mock("next/navigation", () => ({
 }));
 
 import Page from "@/app/category/[...slug]/page";
+import WrapQueryClient from "@/app/components/WrapQueryClient";
 
 function mockFetch(data) {
   return jest.fn().mockImplementation(() =>
@@ -51,7 +52,7 @@ describe("Category page", () => {
       ]
     });
 
-    const { getByTestId } = render(<Page params={{ slug: ['rock'] }} />);
+    const { getByTestId } = render(<WrapQueryClient><Page params={{ slug: ['rock'] }} /></WrapQueryClient>);
     await waitFor(() => {
       expect(getByTestId('list')).toBeInTheDocument();
     });

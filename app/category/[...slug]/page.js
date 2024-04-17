@@ -52,7 +52,7 @@ export default function Page({ params }) {
 
       <ul data-testid="list" className="space-y-4" >
         {filteredPokemons?.map(({ name, id }, ind) => <li key={ind}>
-          <Link href={`/pokemon/${name}/${id}`} className="capitalize hover:underline inline-flex items-center gap-2">
+          <Link prefetch={false} href={`/pokemon/${name}/${id}`} className="capitalize hover:underline inline-flex items-center gap-2">
             <PokemonImg id={id} name={name} />
             {cleanupName(name)}
           </Link>

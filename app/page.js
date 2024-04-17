@@ -27,7 +27,7 @@ export default function Page() {
     {!!categories.length &&
       <ol data-testid="list" className="space-y-4 list-decimal list-inside">
         {categories.map(({ name, id }, ind) => <li key={ind}>
-          <Link href={`/category/${name}/${id}`} className="capitalize hover:underline inline-flex items-center">
+          <Link prefetch={false} href={`/category/${name}/${id}`} className="capitalize hover:underline inline-flex items-center">
             {name}
             <LinkSvg />
           </Link>

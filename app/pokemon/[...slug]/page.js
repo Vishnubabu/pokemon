@@ -97,7 +97,7 @@ export default function Page({ params }) {
           </Row>}
           <Row name="Categories" className="flex gap-2">
             {pokemon.types.map(({ type }, ind) => <Link key={ind} className="capitalize hover:underline inline-flex items-center"
-              href={`/category/${type.name}/${getIdFromUrl(type.url)}`}>
+              prefetch={false} href={`/category/${type.name}/${getIdFromUrl(type.url)}`}>
               {cleanupName(type.name)}
               <LinkSvg />
             </Link>)}
